@@ -1,0 +1,17 @@
+{
+  "name": "03_package",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node src/index.js -- --"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cities": "^2.0.0",
+    "command-line-args": "^5.1.1"
+  }
+}
