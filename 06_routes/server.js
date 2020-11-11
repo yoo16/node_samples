@@ -13,40 +13,43 @@ const html = fs.readFileSync('index.html');
 const port = config.server.port;
 const host = config.server.host;
 
-const app = http.createServer(function (req, res) {
+const routeResponseMap = {
+    "/info": "<h1>Info Page</h1>",
+    "/contact": "<h1>Contact Us</h1>",
+    "/about": "<h1>Learn More About Us</h1>",
+    "/hello": "<h1>Say hello by emailing us <a href='mailto:abc@aaa.bbb'>here</a></h1>",
+    "/error": "<h1>Sorry, the page you are looking for is not here</h1>"
+}
+
+const app = http.createServer(function (request, response) {
     let post = '';
-    let responseMessage = "<h1>Hello!</h1>";
+    let responseMessage = html;
 
-    const routeResponseMap = {
-        "/info": "<h1>Info Page</h1>",
-        "/contact": "<h1>Contact Us</h1>",
-        "/about": "<h1>Learn More About Us</h1>",
-        "/hello": "<h1>Say hello by emailing us <a href='mailto:abc@aaa.bbb'>here</a></h1>",
-        "/error": "<h1>Sorry, the page you are looking for is not here</h1>"
-    }
+    request.on('data', (value) => {
+        post+= value;
+    });
+    request.on('end', () => {
+        if (post) {
+            post = querystring.parse(post);
+            console.log(post);
+        }
+        response.end(responseMessage);
+    });
 
-    if (req.url === "/error") {
-        res.writeHead(httpStatus.NOT_FOUND, {
-            "Content-Type": "text/html"
-        });
+    if (request.url === "/error") {
+        response.writeHead(httpStatus.NOT_FOUND, { "Content-Type": "text/html" });
     } else {
-        res.writeHead(httpStatus.OK, {
-            "Content-Type": "text/html"
-        });
+        response.writeHead(httpStatus.OK, { "Content-Type": "text/html" });
     }
 
+    console.log(request.url);
     // リクエストの経路がマップで定義されているかチェック
-    if (routeResponseMap[req.url]) {
-        responseMessage = routeResponseMap[req.url];
+    if (routeResponseMap[request.url]) {
+        responseMessage = routeResponseMap[request.url];
     }
 
-    // レスポンスに書き込む
-    res.writeHead(httpStatus.OK, { 'Content-Type': 'text/html' });
-    res.write(responseMessage);
-    res.end();
-
-    console.log(`Method: ${req.method}`);
-    console.log(`URL: ${req.url}`);
+    console.log(`Method: ${request.method}`);
+    console.log(`URL: ${request.url}`);
 });
 
 app.listen(port, host);

@@ -13,24 +13,23 @@ const html = fs.readFileSync('index.html');
 const port = config.server.port;
 const host = config.server.host;
 
-const app = http.createServer(function (req, res) {
+const app = http.createServer(function (request, response) {
     let post = '';
 
-    req.on('data', (value) => {
+    request.on('data', (value) => {
         post+= value;
     });
-    req.on('end', () => {
+    request.on('end', () => {
         if (post) {
             post = querystring.parse(post);
             console.log(post);
         }
-        res.end(html);
+        response.end(html);
     });
+    response.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
 
-    res.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
-
-    console.log(`Method: ${req.method}`);
-    console.log(`URL: ${req.url}`);
+    console.log(`Method: ${request.method}`);
+    console.log(`URL: ${request.url}`);
 });
 
 app.listen(port, host);
