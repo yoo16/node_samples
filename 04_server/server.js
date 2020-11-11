@@ -2,7 +2,7 @@
 
 // http モジュールを読み込み
 const http = require('http');
-// const httpStatus = require('http-status-codes');
+//const httpStatus = require('http-status-codes');
 
 const port = 3000;
 const host = '127.0.0.1';
@@ -10,8 +10,8 @@ const message = "<h1>Hello Node Server!</h1>\n";
 
 const app = http.createServer(function (req, res) {
     // HTTPヘッダ
-    // res.writeHead(200, {'Content-Type': 'text/html'});
-    res.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    //res.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
 
     // レスポンス書き込み
     res.write(message);
