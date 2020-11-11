@@ -2,7 +2,7 @@
 
 // http モジュールを読み込み
 const http = require('http');
-// const httpStatus = require('http-status-codes');
+//const httpStatus = require('http-status-codes');
 
 const port = 3000;
 const host = '127.0.0.1';
