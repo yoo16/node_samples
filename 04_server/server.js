@@ -8,18 +8,18 @@ const port = 3000;
 const host = '127.0.0.1';
 const message = "<h1>Hello Node Server!</h1>\n";
 
-const app = http.createServer(function (req, res) {
+const app = http.createServer(function (request, response) {
     // HTTPヘッダ
-    // res.writeHead(200, {'Content-Type': 'text/html'});
-    res.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
+    // response.writeHead(200, {'Content-Type': 'text/html'});
+    response.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
 
     // レスポンス書き込み
-    res.write(message);
+    response.write(message);
 
     //レスポンスを閉じる
-    res.end();
+    response.end();
 
-    console.log(`Method: ${req.method}`);
+    console.log(`Method: ${request.method}`);
     console.log(`Response: ${message}`);
 });
 
