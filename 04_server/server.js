@@ -10,8 +10,8 @@ const message = "<h1>Hello Node Server!</h1>\n";
 
 const app = http.createServer(function (request, response) {
     // HTTPヘッダ
-    // response.writeHead(200, {'Content-Type': 'text/html'});
-    response.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
+    response.writeHead(200, {'Content-Type': 'text/html'});
+    //response.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
 
     // レスポンス書き込み
     response.write(message);
