@@ -23,7 +23,7 @@ const app = http.createServer(function (request, response) {
     console.log(`Response: ${message}`);
 });
 
-// ホストとポストを指定して監視
+// ホストとポートを指定して監視
 app.listen(port, host);
 
 console.log(`Server listen: ${host}:${port}`);
