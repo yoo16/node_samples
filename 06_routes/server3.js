@@ -19,16 +19,17 @@ const app = http.createServer();
 app.on("request", (request, response) => {
     let url = '';
     if (url = routeMap[request.url]) {
-        response.writeHead(httpStatus.OK, { "Content-Type": "text/html" });
         let template = `views/${url}`;
         // console.log(template);
+
+        response.writeHead(httpStatus.OK, { "Content-Type": "text/html" });
         if (fs.existsSync(template)) {
             fs.readFile(template, (error, data) => {
                 response.write(data);
                 response.end();
             });
         } else {
-            response.write('Not Found Template File!');
+            response.write(`Not found file: ${template}`);
             response.end();
         }
     } else {
