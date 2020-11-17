@@ -15,14 +15,13 @@ const routeMap = {
 }
 
 const app = http.createServer();
-
-app.on("request", (request, response) => {
+app.on('request', (request, response) => {
     let url = '';
     if (url = routeMap[request.url]) {
-        let template = `views/${url}`;
-        // console.log(template);
-
         response.writeHead(httpStatus.OK, { "Content-Type": "text/html" });
+
+        let template = `views/${url}`;
+        console.log(template);
         if (fs.existsSync(template)) {
             fs.readFile(template, (error, data) => {
                 response.write(data);
@@ -37,6 +36,8 @@ app.on("request", (request, response) => {
         response.write("<h1>Not Found</h1>");
         response.end();
     }
+    console.log(`Method: ${request.method}`);
+    console.log(`URL: ${request.url}`);
 });
 
 app.listen(port, host);

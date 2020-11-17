@@ -12,24 +12,26 @@ const host = config.server.host;
 const contentTypes = {
     'html': 'text/html',
     'png': 'image/png',
+    'jpg': 'image/jpeg',
     'json': 'application/json',
 };
 
-const filePaths = {
+const routeMap = {
     'html': './public/',
     'png': './public/images',
+    'jpg': './public/images',
     'json': './public/json',
 };
 
 const app = http.createServer();
-app.on("request", (request, response) => {
+app.on('request', (request, response) => {
     let url = request.url;
     let contentType = 'text/html';
-    let filePath = url;
+    let filePath = 'public/index.html';
     let ext = getExtension(url);
 
     if (contentTypes[ext]) contentType = contentTypes[ext];
-    if (filePaths[ext]) filePath = filePaths[ext] + url;
+    if (routeMap[ext]) filePath = routeMap[ext] + url;
 
     // console.log(ext);
     // console.log(contentType);
@@ -42,7 +44,7 @@ app.listen(port, host);
 
 console.log(`Server listen: ${host}:${port}`);
 
-function getExtension(url) {
+const getExtension = (url) => {
     let ext = path.extname(url||'').split('.');
     return ext[ext.length - 1];
 }
@@ -51,10 +53,7 @@ const loadContent = (path, contentType, response) => {
     if (fs.existsSync(path)) {
         response.writeHead(httpStatus.OK, { "Content-Type": contentType });
         fs.readFile(path, (error, data) => {
-            if (error) {
-                console.log(error);
-                return;
-            }
+            if (error) return;
             response.write(data);
             response.end();
         });

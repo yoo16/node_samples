@@ -8,25 +8,25 @@ const config = require('config');
 const port = config.server.port;
 const host = config.server.host;
 
-const app = http.createServer(function (request, response) {
-    request.on('end', () => {
-        let url = 'public' + (request.url.endsWith('/') ? request.url + 'index.html' : request.url);
-        // console.log(url);
-        if (fs.existsSync(url)) {
-            fs.readFile(url, (error, data) => {
-                if (!error) {
-                    response.writeHead(httpStatus.OK, { "Content-Type": "text/html" });
-                    response.end(data);
-                } else {
-                    response.writeHead(httpStatus.INTERNAL_SERVER_ERROR, { "Content-Type": "text/html" });
-                    response.end();
-                }
-            });
-        } else {
-            response.writeHead(httpStatus.NOT_FOUND, { "Content-Type": "text/html" });
-            response.end('Not Found');
-        }
-    });
+const app = http.createServer();
+app.on('request', (request, response) => {
+    let filePath = 'public' + (request.url.endsWith('/') ? request.url + 'index.html' : request.url);
+    let contentType = { "Content-Type": "text/html" };
+    console.log(filePath);
+    if (fs.existsSync(filePath)) {
+        fs.readFile(filePath, (error, data) => {
+            if (!error) {
+                response.writeHead(httpStatus.OK, contentType);
+                response.end(data);
+            } else {
+                response.writeHead(httpStatus.INTERNAL_SERVER_ERROR, contentType);
+                response.end('<h1>Internal Server Error</h1>');
+            }
+        });
+    } else {
+        response.writeHead(httpStatus.NOT_FOUND, contentType);
+        response.end('<h1>Not Found</h1>');
+    }
 
     console.log(`Method: ${request.method}`);
     console.log(`URL: ${request.url}`);

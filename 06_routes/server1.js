@@ -2,7 +2,6 @@
 
 const http = require('http');
 const httpStatus = require('http-status-codes');
-// const fs = require('fs');
 const config = require('config');
 
 const port = config.server.port;
@@ -13,23 +12,23 @@ const routeResponseMap = {
     "/contact": "<h1>Contact Us</h1>",
     "/about": "<h1>About Us</h1>",
     "/hello": "<h1>Hello Page</h1>",
-    "/error": "<h1>Sorry, This Page is Error</h1>"
+    "/error": "<h1>Error</h1>"
 }
 
-const app = http.createServer(function (request, response) {
-    //let responseMessage = fs.readFileSync('public/index.html');
+const app = http.createServer();
+app.on('request', (request, response) => {
+    let contentType = { "Content-Type": "text/html" };
     if (request.url === "/error") {
-        response.writeHead(httpStatus.NOT_FOUND, { "Content-Type": "text/html" });
+        response.writeHead(httpStatus.NOT_FOUND, contentType);
     } else {
-        response.writeHead(httpStatus.OK, { "Content-Type": "text/html" });
+        response.writeHead(httpStatus.OK, contentType);
     }
 
-    //let responseMessage = fs.readFileSync('public/index.html');
-    let responseMessage = '<h1>Hello Node Server!</h1>';
+    let contents = '<h1>Hello Node Server!</h1>';
     if (routeResponseMap[request.url]) {
-        responseMessage = routeResponseMap[request.url];
+        contents = routeResponseMap[request.url];
     }
-    response.end(responseMessage);
+    response.end(contents);
 
     console.log(`Method: ${request.method}`);
     console.log(`URL: ${request.url}`);
