@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Expressデータ送信</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="js/covid19.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="h2">Covid19</h2>
+    <div class="row">
+      <div class="col-12 mb-2">
+        <h2 class="h2">Total</h2>
+        <form id="form_total" method="post">
+          <div class="input-group-prepend">
+            <input class="btn btn-primary w-25" type="submit" value="検索">
+          </div>
+        </form>
+      </div>
+
+      <div class="col-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="h3">レスポンス</h3>
+          </div>
+          <div class="card-body">
+            <p id="result">Express からレスポンスがあると ここに表示されます。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="h3">Total</h3>
+          </div>
+          <div class="card-body">
+              <table class="table">
+                  <tr>
+                      <th>PCR検査数</th>
+                      <td>
+                          <span id="covid19_pcr"></span>
+                      </td>
+                  </tr>
+                  <tr>
+                      <th>死亡者数</th>
+                      <td>
+                          <span id="covid19_death"></span>
+                      </td>
+                  </tr>
+              </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</body>
+
+</html>
