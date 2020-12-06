@@ -30,7 +30,7 @@ app.post("/add", (req, res) => {
 });
 
 //Login Check
-app.post('/input', (req, res) => {
+app.post('/login', (req, res) => {
     const login_name = req.body.login_name;
     const password = req.body.password;
 

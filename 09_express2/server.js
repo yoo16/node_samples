@@ -69,6 +69,17 @@ app.post("/", (req, res) => {
     res.send(result);
 });
 
+//リダイレクト
+app.get("/user/edit/:id", (req, res) => {
+    console.log(req.params.id);
+    res.send('edit page');
+});
+
+app.get("/user/update/:id", (req, res) => {
+    const url = '/user/edit/' + req.params.id;
+    res.redirect(url);
+});
+
 // /products/id リクエスト(GET)
 let error = { 'error': 'not found' };
 app.get("/products/:id", (req, res) => {
