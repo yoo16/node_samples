@@ -1,8 +1,7 @@
-"use strict";
-
 //モジュール 読み込み
 const express = require('express');
 const config = require('config');
+const fs = require('fs');
 
 //サンプル Product モデル モジュール読み込み
 const Product = require("./src/Product");
@@ -23,13 +22,15 @@ app.use(express.urlencoded({ extended: true }));
 //ver 3.x
 //app.use(bodyParser.urlencoded());
 
+app.use(express.static(__dirname + '/public'));
+
 // ミドルウェア関数
 // 全てのリクエスト
 app.use((req, res, next) => {
     console.log(`middleware: all. url: ${req.url}`);
 
     //CROS設定: 全てのドメインに対して許可 
-    res.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
     //次の処理
@@ -58,19 +59,14 @@ app.post("/", (req, res) => {
     //日時生成
     let datetime = new Date();
 
-    let result = { 
-        'id' : id, 
-        'message' : message,
+    let result = {
+        'id': id,
+        'message': message,
         'datetime': datetime
     };
 
     //レスポンス
     res.send(result);
-});
-
-// /users リクエスト(GET)
-app.get("/users", (req, res) => {
-    res.send('GET Request: users')
 });
 
 // /products/id リクエスト(GET)
