@@ -1,6 +1,6 @@
 //モジュール読み込み
 const express = require('express')
-const router = require('./router')
+const routes = require('./routes')
 const ejs = require('ejs')
 const config = require('config')
 
@@ -23,8 +23,8 @@ app.use(express.urlencoded({ extended: true }))
 //静的ファイル有効
 app.use(express.static(__dirname + '/public'))
 
-//ルーティング
-app.use('/', router)
+//ミドルウェアルーティング
+app.use(routes)
 
 //ポート:3000待機
 app.listen(port, host, () => {
