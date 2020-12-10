@@ -7,7 +7,7 @@ $(function () {
     });
 
     //フォームリクエスト
-    $('#form').on('submit', function () {
+    $('#form').on('submit', function (event) {
         //HTML フォームを止める
         event.preventDefault();
 
