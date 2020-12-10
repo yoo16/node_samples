@@ -16,12 +16,18 @@ const host = config.server.host;
 //サーバ作成
 const app = express();
 
-// URLエンコードされたデータを解析する
+//ミドルウェア
+//JSON対応
 app.use(express.json());
+
+// URLエンコードされたデータを解析する
+//POST リクエストのデータ対応
 app.use(express.urlencoded({ extended: true }));
-//ver 3.x
+
+//ver 4.16以前
 //app.use(bodyParser.urlencoded());
 
+// public にある静的コンテンツのアクセスを許可する
 app.use(express.static(__dirname + '/public'));
 
 // ミドルウェア関数
