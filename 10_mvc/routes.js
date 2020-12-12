@@ -7,12 +7,14 @@ const homeController = require('./controllers/HomeController')
 const userController = require('./controllers/UserController')
 
 // //ルーティング
+//home
 router.get('/', homeController.index)
 router.get('/about', homeController.about)
 
-router.get('/login', userController.login)
-router.get('/logout', userController.logout)
-router.post('/auth', userController.auth)
+//user
 router.get('/user', userController.index)
+router.get('/user/login', userController.login)
+router.get('/user/logout', userController.logout)
+router.post('/user/auth', userController.auth)
 
 module.exports = router
