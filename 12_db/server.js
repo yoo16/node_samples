@@ -15,7 +15,7 @@ app.use(express.json())
 app.use(express.static(__dirname + '/public'))
 
 app.use(layouts)
-app.use(routes)
+app.use('/', routes)
 
 //ポート:3000待機
 const port = config.server.port

@@ -1,20 +1,15 @@
 const config = require('config')
 const mysql = require('mysql');
-const { post } = require('../routes');
+//const item = require('../models/Item');
 
 exports.index = (req, res) => {
+    const sql = 'SELECT * FROM items';
     const connection = mysql.createConnection(config.mysql);
     connection.connect();
-
-    let sql = 'SELECT * FROM items';
-    connection.query(sql,
-        function (error, results, fields) {
-            let data = { 
-                items: results,
-                error: error
-            };
-            res.render('item/index', data);
-        });
+    connection.query(sql, (error, rows, fields) => {
+        let data = { items: rows, error: error };
+        res.render('item/index', data);
+    });
     connection.end();
 }
 
@@ -23,31 +18,49 @@ exports.create = (req, res) => {
 }
 
 exports.add = (req, res) => {
-    let posts = {}
-    posts.code = req.body.code;
-    posts.name = req.body.name;
-    posts.price = req.body.price;
-    console.log(posts);
-
-    let sql = 'INSERT INTO items SET ?;';
-    //let sql = 'INSERT INTO items (code, name, price) VALUES (?, ?, ?);';
-
+    const posts = req.body;
+    const sql = 'INSERT INTO items SET ?;';
+    //const sql = 'INSERT INTO items (code, name, price) VALUES (?, ?, ?);';
     const connection = mysql.createConnection(config.mysql);
     connection.connect();
-    connection.query(sql, posts, (error, results, fields) => {
-            if (error) {
-                res.redirect('/item/create');
-            } else {
-                res.redirect('/item');
-            }
-        });
+    connection.query(sql, posts, (error, rows, fields) => {
+        if (error) {
+            res.redirect('/item/create');
+        } else {
+            res.redirect('/item');
+        }
+    });
     connection.end();
 }
 
 exports.edit = (req, res) => {
-    res.render('item/edit');
+    const id = req.params.id;
+    const sql = 'SELECT * FROM items WHERE id = ' + id;
+    const connection = mysql.createConnection(config.mysql);
+    connection.connect();
+    connection.query(sql, (error, rows, fields) => {
+        if (error) {
+            res.redirect('/item');
+        } else {
+            let data = { item: rows[0], error: error };
+            res.render('item/edit', data);
+        }
+    });
+    connection.end();
 }
 
 exports.update = (req, res) => {
-    res.redirect('item/edit');
+    const id = req.params.id;
+    const posts = req.body;
+    const sql = 'UPDATE items SET ? WHERE id = ?;';
+    const connection = mysql.createConnection(config.mysql);
+    connection.connect();
+    connection.query(sql, [posts, id], (error, rows, fields) => {
+        if (error) {
+            res.redirect('/item/edit/' + id);
+        } else {
+            res.redirect('/item');
+        }
+    });
+    connection.end();
 }

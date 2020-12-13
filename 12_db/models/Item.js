@@ -1,13 +1,17 @@
+const db = require('../db');
+const connection = db.connect();
+const tableName = 'items';
 
-exports.fetch = (req, res) => {
-    const connection = mysql.createConnection(config.mysql)
-    connection.connect();
+exports.fetchAll = (callback) => {
+    const sql = 'SELECT * FROM ' + tableName;
+    connection.query(sql, (error, results, fields) => {
+        callback(error, results, fields)
+    })
+}
 
-    let sql = 'SELECT * FROM items';
-    connection.query(sql,
-        function (error, results, fields) {
-            if (error) throw error;
-            res.render('list', { products: results });
-        });
-    connection.end();
+exports.insert = (posts, callback) => {
+    const sql = 'INSERT INTO items SET ?;';
+    connection.query(sql, posts, (error, results, fields) => {
+        callback(error, results, fields)
+    })
 }

@@ -1,11 +1,13 @@
 const config = require('config');
 
 exports.index = (req, res) => {
-    res.render('user/index.ejs', { title: 'User Page' })
+    let data = { title: 'User Page' }
+    res.render('user/index.ejs', data)
 }
 
 exports.login = (req, res) => {
-    res.render('user/login.ejs', { title: 'Login' })
+    let data = { title: 'Login Page' }
+    res.render('user/login.ejs', data)
 }
 
 exports.logout = (req, res) => {
