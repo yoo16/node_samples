@@ -1,0 +1,22 @@
+<a href="/item/create" class="btn btn-outline-primary">追加</a>
+<table class="table table-responsive">
+  <tr>
+    <th>商品コード</th>
+    <th>商品名</th>
+    <th>価格</th>
+  </tr>
+  <% for(let i in items) { %>
+    <tr>
+      <% let item=items[i]; %>
+        <td>
+          <%= item.code %>
+        </td>
+        <td>
+          <%= item.name %>
+        </td>
+        <td>
+          <%= item.price %>
+        </td>
+    </tr>
+    <% } %>
+</table>
