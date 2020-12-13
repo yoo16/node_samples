@@ -24,7 +24,7 @@ app.set('layout', 'layouts/layout')
 app.use(layouts)
 
 //routes ミドルウェア
-app.use(routes)
+app.use('/', routes)
 
 //ポート:3000待機
 app.listen(port, host, () => {
