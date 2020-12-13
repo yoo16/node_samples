@@ -59,17 +59,17 @@
     </ul>
 
     <h3 class="h3">if()</h3>
-    <ul>
-    <% items.forEach((item, index) => { %>
-    <% if (index == 0) { %>
-      <li class="text-danger"><%= item.name %></li> 
-    <% } else if (index % 2 == 0) { %>
-      <li class="text-success"><%= item.name %></li> 
+    <p>
+    <% let number = Math.floor(Math.random(100) * 100) %>
+    <%= number %> is 
+    <% if (number < 25) { %>
+      under 25
+    <% } else if (number < 50) { %>
+      under 50
     <% } else { %>
-      <li class="text-info"><%= item.name %></li> 
+      under 100
     <% } %>
-    <% }) %>
-    </ul>
+    </p>
 
     <h3 class="h3">include()</h3>
     <%- include('./components/message.ejs', { message : 'This is message component.'}) %>
