@@ -1,30 +1,16 @@
-const mysql = require('mysql');
-const config = require('config');
+// DB の connect 処理をモジュールにして読み込む
+const db_connect = require('./lib/db');
 
-//default.json から設定を読み込み、MySQL に設定
-let email = 'test@test.com';
-deleteUserByEmail(email);
+//db_connect: connect()
+const con = db_connect.connect();
 
-function deleteUserByEmail(email) {
-    const connection = mysql.createConnection(config.mysql)
-    let params = { email: email }
-    let sql = 'SELECT * FROM users WHERE ?;';
-    connection.query(sql, params, (error, results, fields) => {
-        if (user = results[0]) deleteUser(user);
-    })
-    connection.end();
-}
+const email = 'tanaka@example.com';
+let sql = 'DELETE FROM users WHERE email = ?;';
+con.query(sql, email, (err, results) => {
+    if (err) console.log(err.sqlMessage);
+    console.log(sql);
+    console.log(results);
+})
 
-function deleteUser(user) {
-    if (!user.id) return;
-
-    const connection = mysql.createConnection(config.mysql)
-    let params = { id: user.id };
-    console.log(params);
-    let sql = 'DELETE FROM users WHERE ?;';
-    connection.query(sql, params, (error, results, fields) => {
-        if (error) throw error;
-        console.log(results);
-    })
-    connection.end();
-}
+//DB接続終了
+con.end();

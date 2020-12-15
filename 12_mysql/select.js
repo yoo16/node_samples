@@ -1,34 +1,31 @@
-const mysql = require('mysql');
-const config = require('config');
+// DB の connect 処理をモジュールにして読み込む
+const db_connect = require('./lib/db');
 
-//default.json から設定を読み込み、MySQL に設定
-const connection = mysql.createConnection(config.mysql)
+//db_connect: connect()
+const con = db_connect.connect();
 
-//MySQL 接続
-connection.connect((error) => {
-    if (error) {
-        console.log("SQL Connection Error: " + error);
-    } else {
-        console.log("SQL Connection Success.");
-    }
-})
-
-let sql = 'SELECT * FROM users LIMIT 10;';
-connection.query(sql, (error, results, fields) => {
-    console.log(`SQL: ${sql}`);
-    const users = results;
-    users.forEach((user, index) => {
-        console.log(`${user.id} : ${user.name}`);
+//users から 10件取得
+const limit = 3;
+const offset = 0;
+let params = [limit, offset];
+let sql = 'SELECT * FROM users LIMIT ? OFFSET ?;';
+con.query(sql, params, (error, results, fields) => {
+    results.forEach((user, index) => {
+        console.log(`${user.id} : ${user.email}`);
     })
 })
 
-let params = {};
-params = { id: 5 };
+//users から id で検索
+params = { 'id': 5 };
 sql = 'SELECT * FROM users WHERE ?;';
-connection.query(sql, params, (error, results, fields) => {
-    console.log(`SQL: ${sql}`);
-    const user = results[0];
-    console.log(`${user.id} : ${user.name} : ${user.email}`);
+con.query(sql, params, (error, results, fields) => {
+    if (results[0]) {
+        const user = results[0];
+        console.log(`${user.id} : ${user.name} : ${user.email}`);
+    } else {
+        console.log('Not found user.');
+    }
 })
 
-connection.end();
+//DB接続終了
+con.end();
