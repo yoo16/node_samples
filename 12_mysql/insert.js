@@ -1,8 +1,8 @@
 // DB の connect 処理をモジュールにして読み込む
-const db_connect = require('./lib/db');
+const db = require('./lib/db');
 
-//db_connect: connect()
-const con = db_connect.connect();
+//db: connect()
+const con = db.connect();
 
 const password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
 let posts = [ 
@@ -17,6 +17,7 @@ let sql = 'INSERT INTO users SET ?;';
 posts.forEach((post) => {
     con.query(sql, post, (err, results) => {
         if (err) console.log(err.sqlMessage);
+        console.log('insert success.');
     })
 })
 

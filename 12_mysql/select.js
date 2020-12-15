@@ -1,8 +1,8 @@
 // DB の connect 処理をモジュールにして読み込む
-const db_connect = require('./lib/db');
+const db = require('./lib/db');
 
-//db_connect: connect()
-const con = db_connect.connect();
+//db: connect()
+const con = db.connect();
 
 //users から 10件取得
 const limit = 3;
@@ -20,7 +20,7 @@ params = { 'id': 5 };
 sql = 'SELECT * FROM users WHERE ?;';
 con.query(sql, params, (error, results, fields) => {
     if (results[0]) {
-        const user = results[0];
+        let user = results[0];
         console.log(`${user.id} : ${user.name} : ${user.email}`);
     } else {
         console.log('Not found user.');

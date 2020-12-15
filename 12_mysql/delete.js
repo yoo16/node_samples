@@ -1,15 +1,18 @@
 // DB の connect 処理をモジュールにして読み込む
-const db_connect = require('./lib/db');
+const db = require('./lib/db');
 
-//db_connect: connect()
-const con = db_connect.connect();
+//db: connect()
+const con = db.connect();
 
-const email = 'tanaka@example.com';
+const email = 'itoh@example.com';
 let sql = 'DELETE FROM users WHERE email = ?;';
+
+//let params = { email: email };
+//let sql = 'DELETE FROM users WHERE ?;';
+//let sql = 'DELETE FROM users;';
 con.query(sql, email, (err, results) => {
-    if (err) console.log(err.sqlMessage);
-    console.log(sql);
-    console.log(results);
+    if (err) throw err;
+    console.log('delete success.');
 })
 
 //DB接続終了
