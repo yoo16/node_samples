@@ -1,33 +1,47 @@
 //モジュール読み込み
-const app = require("express")();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 const config = require('config');
 
 //config 設定
 const port = config.server.port;
 const host = config.server.host;
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
-});
+//JSON
+app.use(express.json())
 
-io.on("connection", (socket) => {
-    console.log("ユーザーが接続しました");
+//URLエンコード
+app.use(express.urlencoded({ extended: true }))
+
+//静的ファイル有効
+app.use(express.static(__dirname + '/public'))
+
+io.on('connection', (socket) => {
+    console.log('ユーザーが接続しました');
 
     // 送信元以外のクライアントに送信
     socket.on('c2s_message', (data) => {
         let datetime = new Date();
-        io.sockets.emit('s2c_message', { message: data.message, datetime: datetime });
+        io.sockets.emit('s2c_message', { 
+            message: data.message,
+            user_id: data.user_id,
+            datetime: datetime,
+        });
     });
 
     // すべてのクライアントに送信
     socket.on('c2s_broadcast', (data) => {
         let datetime = new Date();
-        socket.broadcast.emit('s2c_message', { message: data.message, datetime: datetime });
+        socket.broadcast.emit('s2c_message', {
+            message: data.message,
+            user_id: data.user_id,
+            datetime: datetime
+        });
     });
 });
 
 http.listen(port, host, () => {
-    console.log(`listening on ${host}:${port}`);
+    console.log(`listening on http://${host}:${port}`);
 });

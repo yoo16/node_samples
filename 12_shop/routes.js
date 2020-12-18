@@ -6,7 +6,7 @@ const router = express.Router()
 const itemController = require('./controllers/ItemController')
 
 //item
-router.get('/item', itemController.index)
+router.get('/item/', itemController.index)
 router.get('/item/create', itemController.create)
 router.post('/item/add', itemController.add)
 router.get('/item/edit/:id', itemController.edit)

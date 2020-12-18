@@ -1,16 +1,14 @@
-const config = require('config')
+//const db = require('../lib/db');
+const item = require('../models/Item');
 const mysql = require('mysql');
-//const item = require('../models/Item');
+const config = require('config');
 
 exports.index = (req, res) => {
-    const sql = 'SELECT * FROM items';
-    const connection = mysql.createConnection(config.mysql);
-    connection.connect();
-    connection.query(sql, (error, rows, fields) => {
-        let data = { items: rows, error: error };
+    item.fetch((err, results, fields) => {
+        if (err) throw err;
+        let data = { items: results, err: err };
         res.render('item/index', data);
     });
-    connection.end();
 }
 
 exports.create = (req, res) => {
@@ -18,49 +16,40 @@ exports.create = (req, res) => {
 }
 
 exports.add = (req, res) => {
-    const posts = req.body;
-    const sql = 'INSERT INTO items SET ?;';
-    //const sql = 'INSERT INTO items (code, name, price) VALUES (?, ?, ?);';
-    const connection = mysql.createConnection(config.mysql);
-    connection.connect();
-    connection.query(sql, posts, (error, rows, fields) => {
-        if (error) {
+    item.insert(req.body, (err, results) => {
+        if (err) {
             res.redirect('/item/create');
         } else {
             res.redirect('/item');
         }
     });
-    connection.end();
 }
 
 exports.edit = (req, res) => {
-    const id = req.params.id;
-    const sql = 'SELECT * FROM items WHERE id = ' + id;
-    const connection = mysql.createConnection(config.mysql);
-    connection.connect();
-    connection.query(sql, (error, rows, fields) => {
-        if (error) {
+    //const con = db.connect();
+    item.find(req.params.id, (err, results) => {
+        if (err) {
             res.redirect('/item');
         } else {
-            let data = { item: rows[0], error: error };
+            let data = { item: results[0], err: err };
             res.render('item/edit', data);
         }
     });
-    connection.end();
 }
 
 exports.update = (req, res) => {
-    const id = req.params.id;
-    const posts = req.body;
+    let params = [req.body, req.params.id];
     const sql = 'UPDATE items SET ? WHERE id = ?;';
-    const connection = mysql.createConnection(config.mysql);
-    connection.connect();
-    connection.query(sql, [posts, id], (error, rows, fields) => {
-        if (error) {
+
+    const con = mysql.createConnection(config.mysql)
+    con.connect();
+    // const con = db.connect();
+    con.query(sql, params, (err) => {
+        if (err) {
             res.redirect('/item/edit/' + id);
         } else {
             res.redirect('/item');
         }
     });
-    connection.end();
+    con.end();
 }
