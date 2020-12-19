@@ -1,79 +1,75 @@
 const url = 'http://localhost:3000';
 const message = $('#message');
 const myChatList = $('#myChatList');
-const friendChatList = $('#friendChatList');
-const userSelect = $('#userSelect');
-const users = [
-    { id: 1, name: 'Cat123' },
-    { id: 2, name: 'Tokyo88' },
-    { id: 3, name: 'Michel' },
-    { id: 4, name: 'Anonymous' },
-    { id: 5, name: 'King111' },
-]
-let loginUser = {};
+const loginUser = $('#loginUser');
+const messageArea = $('#messageArea');
+const loginArea = $('#loginArea');
+const user = { name: '', token: '' };
+
+//初期設定
+$(() => {
+    messageArea.hide();
+})
 
 //サーバー接続
 const ioSocket = io.connect(url);
 
 //接続
-ioSocket.on('connect', () => { });
+ioSocket.on('connect', () => {});
 
 //切断
-ioSocket.on('disconnect', () => { });
+ioSocket.on('disconnect', () => {});
 
-//サーバーからクライアントへの送り返し
-ioSocket.on('s2c_message', (data) => {
+// server から client へメッセージ
+ioSocket.on('server_to_client', (data) => {
     appendMessage(data)
 });
 
-// 自分を含む全員宛にメッセージを送信
-$("#sendBtn").click(() => {
+// client からの server へメッセージ
+$('#sendBtn').click(() => {
+    if (!user.token) return;
     if (!message.val()) return;
-    userSelect.prop("disabled", true);
-    loginUser = users.find(user => userSelect.val() == user.id);
 
-    ioSocket.emit('c2s_message', { message: message.val(), user_id: userSelect.val() });
-    clearMessage();
-});
-
-// 自分以外の全員宛にメッセージを送信
-$("#broadcastBtn").click(() => {
-    if (!message.val()) return;
-    userSelect.prop("disabled", true);
-
-    ioSocket.emit("c2s_broadcast", { message: message.val(), user_id: userSelect.val() });
-    clearMessage();
-});
-
-$(() => {
-    users.forEach((user) => {
-        let option = $('<option>');
-        option.val(user.id).text(user.name);
-        userSelect.append(option);
+    ioSocket.emit('client_to_server', { 
+        message: message.val(),
+        user: user,
     });
-})
+    clearMessage();
+});
 
 function appendMessage(data) {
-
     const date = new Date(data.datetime);
     const date_string = date.toLocaleString('ja-JP');
-    const user = users.find(user => data.user_id == user.id);
 
-    chatStyle = (loginUser.id == user.id) ? 'alert alert-info' : 'alert alert-success';
+    chatStyle = (data.user.token == user.token) ? 'alert alert-info' : 'alert alert-success';
+    let message = data.message.replace(/\r?\n/g, '<br>');
     let messageDOM = $('<div>');
-    messageDOM.addClass(chatStyle)
-    messageDOM.text(data.message)
+    messageDOM.addClass(chatStyle);
+    messageDOM.html(message);
 
-    const header = `${user.name} : ${date_string}`;
-    let userNameDOM = $('<small>');
-    userNameDOM.text(header)
+    let headerDOM = $('<div>');
+    let userDOM = $('<small>');
+    userDOM.html(`${data.user.name} : ${date_string}`);
+    headerDOM.append(userDOM);
 
-    let li = $('<li>');
-    li.addClass('list-group-item');
-    li.append(userNameDOM);
-    li.append(messageDOM);
+    let chatDOM = $('<div>');
+    chatDOM.append(headerDOM);
+    chatDOM.append(messageDOM);
 
-    myChatList.prepend(li);
+    myChatList.prepend(chatDOM);
+}
+
+$('#loginBtn').click(() => {
+    if (loginUser.val()) {
+        login(loginUser.val());
+        messageArea.show();
+        loginUser.prop('disabled', true);
+    }
+});
+
+function login(userName) {
+    user.name = userName;
+    user.token = Math.random().toString(32).substring(2);
 }
 
 function clearMessage() {
