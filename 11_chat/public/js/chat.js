@@ -19,6 +19,34 @@ chatArea.hide();
 //初期設定
 $(() => {
 
+    imagePath = (fileName) => {
+        let path = 'images/' + fileName;
+        return path;
+    }
+
+    addMessage = (value) => {
+        if (!value) return;
+        let messageElement = $('<small>').addClass('text-muted').text(value);
+        myChatList.prepend(messageElement);
+    }
+
+    updateUserList = () => {
+        console.log(users);
+        userList.html('');
+        $.each(users, function (key, user) {
+            let img = $('<img>').attr({ 'src': imagePath(user.icon), 'width': 16 });
+            let li = $('<li>').addClass('list-group-item').append(img).append(user.name);
+            userList.append(li);
+        });
+
+        updateUserNumber() = () => {
+            let number = Object.keys(users).length;
+            if (!number) return;
+            userNumber.text(number);
+        }
+        updateUserNumber();
+    }
+
     //サーバー接続
     loginArea.fadeIn(FADE_TIME);
     let socket = io.connect(url, {
@@ -151,8 +179,9 @@ $(() => {
         socket.emit('userList');
     });
 
-    const icons = [...Array(6).keys()].map(i => `${++i}.png`);
-    function createIcons() {
+
+    createIcons = () => {
+        const icons = [...Array(6).keys()].map(i => `${++i}.png`);
         icons.forEach((icon, index) => {
             index++;
 
@@ -176,33 +205,5 @@ $(() => {
     }
     createIcons();
 
-    function imagePath(fileName) {
-        let path = 'images/' + fileName;
-        return path;
-    }
-
-    function addMessage(value) {
-        if (!value) return;
-        let messageElement = $('<small>').addClass('text-muted').text(value);
-        myChatList.prepend(messageElement);
-    }
-
-    function updateUserList() {
-        updateUserNumber();
-
-        console.log(users);
-        userList.html('');
-        $.each(users, function (key, user) {
-            let img = $('<img>').attr({ 'src': imagePath(user.icon), 'width': 16 });
-            let li = $('<li>').addClass('list-group-item').append(img).append(user.name);
-            userList.append(li);
-        });
-    }
-
-    function updateUserNumber() {
-        let number = Object.keys(users).length;
-        if (!number) return;
-        userNumber.text(number);
-    }
 
 })
