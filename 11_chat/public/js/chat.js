@@ -50,13 +50,14 @@ $(() => {
 
         let isToken = (data.user.token == user.token);
         let chatStyle = (isToken) ? 'p-3 balloon-right' : 'p-3 balloon-left';
-        let dateStyle = (isToken) ? 'text-primary' : 'text-dark';
+        let dateStyle = (isToken) ? 'p-3 text-primary' : 'p-1 text-dark';
+        let userStyle = (isToken) ? 'text-right' : 'text-left';
         let message = data.message.replace(/\r?\n/g, '<br>');
         let messageElement = $('<div>').addClass(chatStyle).html(message);
         let img = $('<img>').attr({'src': imagePath(data.user.icon), 'width': 20 });
         let userElement = $('<small>').addClass(dateStyle).append(img).append(data.user.name);
         let dateElement = $('<small>').addClass('text-dark').html(date_string);
-        let headerElement = $('<div>').addClass('text-left').append([userElement]);
+        let headerElement = $('<p>').addClass(userStyle).append([userElement]);
         let footerElement = $('<div>').addClass('text-right').append(dateElement);
         let chatElement = $('<div>').hide().append([headerElement, messageElement, footerElement]);
 
@@ -192,7 +193,8 @@ $(() => {
         console.log(users);
         userList.html('');
         $.each(users, function (key, user) {
-            let li = $('<li>').addClass('list-group-item').text(user.name);
+            let img = $('<img>').attr({ 'src': imagePath(user.icon), 'width': 16 });
+            let li = $('<li>').addClass('list-group-item').append(img).append(user.name);
             userList.append(li);
         });
     }
