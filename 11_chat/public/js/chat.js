@@ -230,6 +230,7 @@ $(() => {
             let base64 = canvas.toDataURL(mime_type);
             let data = { user: user, image: base64 };
             socket.emit('sendStamp', data);
+            stampList.toggle();
         }
     });
 
