@@ -1,10 +1,12 @@
-const url = 'http://localhost:3000';
+//const url = 'http://localhost:3000';
+const url = '';
 const chatArea = $('#chatArea');
 const loginArea = $('#loginArea');
 const message = $('#message');
 const myChatList = $('#myChatList');
 const userList = $('#userList');
 const inputName = $('#inputName');
+const iconList = $('#iconList');
 const userName = $('.userName');
 const userNumber = $('.userNumber');
 const FADE_TIME = 500;
@@ -16,144 +18,189 @@ chatArea.hide();
 
 //初期設定
 $(() => {
+
+    //サーバー接続
     loginArea.fadeIn(FADE_TIME);
-})
+    let socket = io.connect(url, {
+        'autoConnect': true,
+        'reconnect': true,
+    });
 
-//サーバー接続
-const socket = io.connect(url);
+    //接続
+    socket.on('connect', () => { 
+        console.log('connect');
+        console.log(socket.id);
+        console.log(socket.connected);
+    });
 
-//接続
-socket.on('connect', () => { });
+    //切断
+    socket.on('disconnect', (reason) => {
+        console.log('disconnect');
+        if (reason === 'io server disconnect') {
+            socket.connect();
+        }
+    });
 
-//切断
-socket.on('disconnect', (data) => {
-    console.log('disconnect');
-    updateUserNumber(data.userNumber);
-});
+    // server から client へメッセージ
+    socket.on('server_to_client', (data) => {
+        console.log('server_to_client');
+        if (!user.token) return;
+        console.log(data);
+        const date_string = new Date(data.datetime).toLocaleString('ja-JP');
 
-// server から client へメッセージ
-socket.on('server_to_client', (data) => {
-    if (!user.token) return;
-    console.log(data);
-    const date_string = new Date(data.datetime).toLocaleString('ja-JP');
+        let isToken = (data.user.token == user.token);
+        let chatStyle = (isToken) ? 'p-3 balloon-right' : 'p-3 balloon-left';
+        let dateStyle = (isToken) ? 'text-primary' : 'text-dark';
+        let message = data.message.replace(/\r?\n/g, '<br>');
+        let messageElement = $('<div>').addClass(chatStyle).html(message);
+        let img = $('<img>').attr({'src': imagePath(data.user.icon), 'width': 20 });
+        let userElement = $('<small>').addClass(dateStyle).append(img).append(data.user.name);
+        let dateElement = $('<small>').addClass('text-dark').html(date_string);
+        let headerElement = $('<div>').addClass('text-left').append([userElement]);
+        let footerElement = $('<div>').addClass('text-right').append(dateElement);
+        let chatElement = $('<div>').hide().append([headerElement, messageElement, footerElement]);
 
-    let chatStyle = 'p-3 ';
-    chatStyle+= (data.user.token == user.token) ? 'balloon-right' : 'balloon-left';
-    let dateStyle = (data.user.token == user.token) ? 'text-primary' : 'text-dark';
-    let message = data.message.replace(/\r?\n/g, '<br>');
-    let messageElement = $('<div>').addClass(chatStyle).html(message);
-    let userElement = $('<small>').addClass(dateStyle).html(data.user.name);
-    let dateElement = $('<small>').addClass('text-dark').html(date_string);
-    let headerElement = $('<div>').addClass('text-left').append([userElement]);
-    let footerElement = $('<div>').addClass('text-right').append(dateElement);
-    let chatElement = $('<div>').hide().append([headerElement, messageElement, footerElement]);
+        myChatList.prepend(chatElement);
+        chatElement.fadeIn(FADE_TIME);
+    });
 
-    myChatList.prepend(chatElement);
-    chatElement.fadeIn(FADE_TIME);
-});
+    // server から login 情報取得
+    socket.on('logined', (data) => {
+        console.log('logined');
+        console.log(socket.id);
+        if (data.user) {
+            user = data.user;
+            users = data.users;
 
-// server から login 情報取得
-socket.on('logined', (data) => {
-    console.log('logined');
-    if (data.user) {
-        user = data.user;
-        users = data.users;
+            console.log(user);
+            console.log(users);
 
-        userName.text(user.name);
-        updateUserList();
-    }
-});
+            userName.text(user.name);
+            updateUserList();
+        }
+    });
 
-// login 情報（ブロードキャスト）
-socket.on('user_joined', (data) => {
-    console.log('user_joined');
-    if (data.user && data.users) {
-        let message = data.user.name + ' joined.';
+    // login 情報（ブロードキャスト）
+    socket.on('user_joined', (data) => {
+        console.log('user_joined');
+        if (data.user && data.users) {
+            let message = data.user.name + ' joined.';
+            addMessage(message);
+
+            users = data.users;
+            updateUserList();
+        }
+    });
+
+    // ログアウト
+    socket.on('user_left', (data) => {
+        console.log('user_left');
+        let message = data.username + ' logout.';
         addMessage(message);
 
         users = data.users;
         updateUserList();
-    }
-});
-
-socket.on('user_left', (data) => {
-    console.log('user_left');
-    let message = data.username + ' logout.';
-    addMessage(message);
-
-    users = data.users;
-    updateUserList();
-});
-
-socket.on('show_users', (data) => {
-    console.log('show_users');
-
-    users = data.users;
-    updateUserList();
-});
-
-// client からの server へメッセージ
-$('#send').click(() => {
-    if (!user.token) return;
-    if (!message.val()) return;
-
-    socket.emit('client_to_server', {
-        message: message.val(),
-        user: user,
     });
-    clearMessage();
-});
 
-// サーバーへ login
-$('#login').click(() => {
-    if (inputName.val()) {
-        loginArea.hide();
-        chatArea.fadeIn(FADE_TIME);
+    // ユーザ一覧
+    socket.on('show_users', (data) => {
+        console.log('show_users');
 
-        user.name = inputName.val();
-        socket.emit('login', user);
-    }
-});
-
-$('#logout').click(() => {
-    console.log('logout');
-    socket.emit('logout');
-    chatArea.fadeOut(FADE_TIME);
-    loginArea.fadeIn(FADE_TIME);
-});
-
-$('#users').click(() => {
-    console.log('users');
-    socket.emit('userList');
-});
-
-function addMessage(value) {
-    if (!value) return;
-    let messageElement = $('<small>').addClass('text-muted').text(value);
-    myChatList.prepend(messageElement);
-}
-
-function updateUserList() {
-    updateUserNumber();
-
-    console.log(users);
-    userList.html('');
-    $.each(users, function(key, user) {
-        let li = $('<li>').addClass('list-group-item').text(user.name);
-        userList.append(li);
+        users = data.users;
+        updateUserList();
     });
-}
 
-function updateUserNumber() {
-    let number = Object.keys(users).length;
-    if (!number) return;
-    userNumber.text(number);
-}
+    // client からの server へメッセージ
+    $('#send').click(() => {
+        if (!user.token) return;
+        if (!message.val()) return;
 
-function clearChat() {
-    myChatList.html('');
-}
+        socket.emit('client_to_server', {
+            message: message.val(),
+            user: user,
+        });
+        message.val('');
+    });
 
-function clearMessage() {
-    message.val('');
-}
+    // サーバーへ login
+    $('#login').click(() => {
+        user = {};
+        if (inputName.val()) {
+            loginArea.hide();
+            chatArea.fadeIn(FADE_TIME);
+
+            user.name = inputName.val();
+            user.icon = $('input[name=icon]:checked').val();
+            socket.emit('login', user);
+            
+            console.log(user);
+        }
+    });
+
+    $('#logout').click(() => {
+        console.log('logout');
+        socket.emit('logout');
+        user = {};
+        chatArea.fadeOut(FADE_TIME);
+        loginArea.fadeIn(FADE_TIME);
+    });
+
+    $('#users').click(() => {
+        console.log('users');
+        socket.emit('userList');
+    });
+
+    const icons = [...Array(6).keys()].map(i => `${++i}.png`);
+    function createIcons() {
+        icons.forEach((icon, index) => {
+            index++;
+
+            let id = 'icon_' + index;
+            let label = $('<label>').attr({ 'for': id });
+
+            let input = $('<input>').attr({ 
+                'id': id,
+                'name': 'icon',
+                'type': 'radio',
+                'value': icon,
+            });
+            if (index == 1) input.attr({ checked: 'checked' });
+            label.append(input);
+
+            let img = $('<img>').attr({ 'src': imagePath(icon), 'width': 26 });
+            label.append(img);
+
+            iconList.append(label);
+        })
+    }
+    createIcons();
+
+    function imagePath(fileName) {
+        let path = 'images/' + fileName;
+        return path;
+    }
+
+    function addMessage(value) {
+        if (!value) return;
+        let messageElement = $('<small>').addClass('text-muted').text(value);
+        myChatList.prepend(messageElement);
+    }
+
+    function updateUserList() {
+        updateUserNumber();
+
+        console.log(users);
+        userList.html('');
+        $.each(users, function (key, user) {
+            let li = $('<li>').addClass('list-group-item').text(user.name);
+            userList.append(li);
+        });
+    }
+
+    function updateUserNumber() {
+        let number = Object.keys(users).length;
+        if (!number) return;
+        userNumber.text(number);
+    }
+
+})
