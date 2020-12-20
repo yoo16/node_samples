@@ -37,12 +37,16 @@ socket.on('server_to_client', (data) => {
     console.log(data);
     const date_string = new Date(data.datetime).toLocaleString('ja-JP');
 
-    chatStyle = (data.user.token == user.token) ? 'alert alert-info' : 'alert alert-success';
+    let chatStyle = 'p-3 ';
+    chatStyle+= (data.user.token == user.token) ? 'balloon-right' : 'balloon-left';
+    let dateStyle = (data.user.token == user.token) ? 'text-primary' : 'text-dark';
     let message = data.message.replace(/\r?\n/g, '<br>');
     let messageElement = $('<div>').addClass(chatStyle).html(message);
-    let userElement = $('<small>').html(`${data.user.name} : ${date_string}`);
-    let headerElement = $('<div>').append(userElement);
-    let chatElement = $('<div>').hide().append([headerElement, messageElement]);
+    let userElement = $('<small>').addClass(dateStyle).html(data.user.name);
+    let dateElement = $('<small>').addClass('text-dark').html(date_string);
+    let headerElement = $('<div>').addClass('text-left').append([userElement]);
+    let footerElement = $('<div>').addClass('text-right').append(dateElement);
+    let chatElement = $('<div>').hide().append([headerElement, messageElement, footerElement]);
 
     myChatList.prepend(chatElement);
     chatElement.fadeIn(FADE_TIME);
@@ -125,7 +129,7 @@ $('#users').click(() => {
 
 function addMessage(value) {
     if (!value) return;
-    let messageElement = $('<small>').text(value);
+    let messageElement = $('<small>').addClass('text-muted').text(value);
     myChatList.prepend(messageElement);
 }
 
@@ -144,6 +148,10 @@ function updateUserNumber() {
     let number = Object.keys(users).length;
     if (!number) return;
     userNumber.text(number);
+}
+
+function clearChat() {
+    myChatList.html('');
 }
 
 function clearMessage() {
