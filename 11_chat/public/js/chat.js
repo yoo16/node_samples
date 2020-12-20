@@ -7,6 +7,7 @@ const myChatList = $('#myChatList');
 const userList = $('#userList');
 const inputName = $('#inputName');
 const iconList = $('#iconList');
+const stampList = $('#stampList');
 const userName = $('.userName');
 const userNumber = $('.userNumber');
 const FADE_TIME = 500;
@@ -15,6 +16,7 @@ let users = {};
 
 loginArea.hide();
 chatArea.hide();
+stampList.hide();
 
 //初期設定
 $(() => {
@@ -39,13 +41,51 @@ $(() => {
             userList.append(li);
         });
 
-        updateUserNumber() = () => {
+        updateUserNumber = () => {
             let number = Object.keys(users).length;
             if (!number) return;
             userNumber.text(number);
         }
         updateUserNumber();
     }
+    createIcons = () => {
+        const icons = [...Array(6).keys()].map(i => `${++i}.png`);
+        icons.forEach((icon, index) => {
+            index++;
+
+            let id = 'icon_' + index;
+            let label = $('<label>').attr({ 'for': id });
+
+            let input = $('<input>').attr({
+                'id': id,
+                'name': 'icon',
+                'type': 'radio',
+                'value': icon,
+            });
+            if (index == 1) input.attr({ checked: 'checked' });
+            label.append(input);
+
+            let img = $('<img>').attr({ 'src': imagePath(icon), 'width': 26 });
+            label.append(img);
+
+            iconList.append(label);
+        })
+    }
+    createStamps = () => {
+        const stamps = [...Array(6).keys()].map(i => `stamp${++i}.png`);
+        stamps.forEach((stamp, index) => {
+            index++;
+            let imageId = 'stamp_' + index;
+            let a = $('<a>').attr({ 'stamp': imageId, 'class': 'sendStamp' });
+            let img = $('<img>').attr({'id': imageId, 'src': imagePath(stamp), 'width': 100 });
+            a.append(img);
+            stampList.append(a);
+        })
+
+    }
+
+    createIcons();
+    createStamps();
 
     //サーバー接続
     loginArea.fadeIn(FADE_TIME);
@@ -55,7 +95,7 @@ $(() => {
     });
 
     //接続
-    socket.on('connect', () => { 
+    socket.on('connect', () => {
         console.log('connect');
         console.log(socket.id);
         console.log(socket.connected);
@@ -82,7 +122,7 @@ $(() => {
         let userStyle = (isToken) ? 'text-right' : 'text-left';
         let message = data.message.replace(/\r?\n/g, '<br>');
         let messageElement = $('<div>').addClass(chatStyle).html(message);
-        let img = $('<img>').attr({'src': imagePath(data.user.icon), 'width': 20 });
+        let img = $('<img>').attr({ 'src': imagePath(data.user.icon), 'width': 20 });
         let userElement = $('<small>').addClass(dateStyle).append(img).append(data.user.name);
         let dateElement = $('<small>').addClass('text-dark').html(date_string);
         let headerElement = $('<p>').addClass(userStyle).append([userElement]);
@@ -131,6 +171,12 @@ $(() => {
         updateUserList();
     });
 
+    socket.on('loadStamp', (data) => {
+        console.log('loadStamp');
+        let img = $('<img width="100">').attr('src', data.image);
+        myChatList.prepend(img);
+    });
+
     // ユーザ一覧
     socket.on('show_users', (data) => {
         console.log('show_users');
@@ -140,7 +186,7 @@ $(() => {
     });
 
     // client からの server へメッセージ
-    $('#send').click(() => {
+    $('#send').on('click', () => {
         if (!user.token) return;
         if (!message.val()) return;
 
@@ -152,7 +198,7 @@ $(() => {
     });
 
     // サーバーへ login
-    $('#login').click(() => {
+    $('#login').on('click', () => {
         user = {};
         if (inputName.val()) {
             loginArea.hide();
@@ -161,12 +207,33 @@ $(() => {
             user.name = inputName.val();
             user.icon = $('input[name=icon]:checked').val();
             socket.emit('login', user);
-            
+
             console.log(user);
         }
     });
 
-    $('#logout').click(() => {
+    $('.stamp').on('click', () => {
+        stampList.toggle();
+    });
+
+    $('.sendStamp').on('click', (event) => {
+        const mime_type = 'image/png';
+        const image = new Image();
+        image.src = $(event.target).attr('src');
+        image.onload = function(event) {
+            console.log(event);
+            const canvas = document.createElement("canvas");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0);
+            let base64 = canvas.toDataURL(mime_type);
+            let data = { user: user, image: base64 };
+            socket.emit('sendStamp', data);
+        }
+    });
+
+    $('#logout').on('click', () => {
         console.log('logout');
         socket.emit('logout');
         user = {};
@@ -179,31 +246,6 @@ $(() => {
         socket.emit('userList');
     });
 
-
-    createIcons = () => {
-        const icons = [...Array(6).keys()].map(i => `${++i}.png`);
-        icons.forEach((icon, index) => {
-            index++;
-
-            let id = 'icon_' + index;
-            let label = $('<label>').attr({ 'for': id });
-
-            let input = $('<input>').attr({ 
-                'id': id,
-                'name': 'icon',
-                'type': 'radio',
-                'value': icon,
-            });
-            if (index == 1) input.attr({ checked: 'checked' });
-            label.append(input);
-
-            let img = $('<img>').attr({ 'src': imagePath(icon), 'width': 26 });
-            label.append(img);
-
-            iconList.append(label);
-        })
-    }
-    createIcons();
-
+   
 
 })

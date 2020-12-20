@@ -74,6 +74,13 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('user_joined', data);
     });
 
+    //画像
+    socket.on('sendStamp', (imageData) => {
+        console.log('sendStamp');
+        io.emit('loadStamp', imageData);
+    });
+
+    //ユーザ一覧
     socket.on('userList', () => {
         console.log('userList');
         console.log(users);
@@ -82,6 +89,7 @@ io.on('connection', (socket) => {
         });
     });
 
+    //ログアウト
     socket.on('logout', () => {
         console.log('logout');
         logout(socket);
