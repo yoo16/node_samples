@@ -30,7 +30,6 @@ logout = (socket) => {
 }
 
 fetchUser = (socket) => {
-    console.log(users);
     if (!users) return;
     return users[socket.id];
 }
@@ -52,32 +51,38 @@ io.on('connection', (socket) => {
         io.emit('server_to_client', data);
     })
 
+    //ログイン処理
     socket.on('login', (user) => {
         console.log('login');
 
+        //user.isConnect = true なら終了
         if (user.isConnect) return;
+
+        //user.isConnect を true にする
         user.isConnect = true;
 
         //トークン発行
         user.token = generateToken();
 
-        //Socket ID をキーにユーザ登録
+        //Socket ID をキーに user を users 配列に登録
         users[socket.id] = user;
 
+        //data の作成
         let data = { user: user, users: users };
         console.log(user);
 
-        //送信元に送信
+        //送信元の「logined」に、データ送信 emit()
         socket.emit('logined', data);
 
-        //送信元以外全てのクライアントに送信
+        //送信元以外全てのクライアントの「user_joined」にデータ送信（ブロードキャスト）
         socket.broadcast.emit('user_joined', data);
     });
 
-    //画像
-    socket.on('sendStamp', (imageData) => {
+    //スタンプ送受信
+    socket.on('sendStamp', (data) => {
+        data.datetime = new Date();
         console.log('sendStamp');
-        io.emit('loadStamp', imageData);
+        io.emit('loadStamp', data);
     });
 
     //ユーザ一覧

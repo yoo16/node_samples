@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="form-group">
+      <textarea type="text" class="form-control mt-3" id="message" placeholder="Message"></textarea>
+      <button class="btn btn btn-info" id="send">Send</button>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <h3 class="h3">Message</h3>
+        <div id="myChatList"></div>
+      </div>
+      <div class="col-6">
+        <h3 class="h3">Message(Broadcast)</h3>
+        <div id="broadcastChatList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="text/javascript" src="js/client.js"></script>
+</body>
+
+</html>
