@@ -1,6 +1,6 @@
 //モジュール読み込み
 const express = require('express')
-const ejs = require('ejs')
+//const ejs = require('ejs')
 const config = require('config')
 
 //カスタムモジュール routes.js 読み込み
@@ -14,7 +14,7 @@ const host = config.server.host
 const app = express()
 
 //EJS 設定
-app.set('ejs', ejs.renderFile)
+app.set('view engine', 'ejs')
 
 //JSON
 app.use(express.json())

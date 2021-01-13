@@ -79,10 +79,17 @@ io.on('connection', (socket) => {
     });
 
     //スタンプ送受信
-    socket.on('sendStamp', (data) => {
+    socket.on('upload_stamp', (data) => {
+        console.log('upload_stamp');
         data.datetime = new Date();
-        console.log('sendStamp');
-        io.emit('loadStamp', data);
+        io.emit('load_stamp', data);
+    });
+
+    //画像送受信
+    socket.on('upload_image', (data) => {
+        console.log('upload_image');
+        data.datetime = new Date();
+        io.emit('load_image', data);
     });
 
     //ユーザ一覧

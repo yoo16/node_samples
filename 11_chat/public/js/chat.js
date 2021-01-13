@@ -13,6 +13,7 @@ const userNumber = $('.userNumber');
 const FADE_TIME = 500;
 const USER_ICON_SIZE = 32;
 const STAMP_WIDTH = 150;
+const IMAGE_WIDTH = 500;
 let user = {};
 let users = {};
 
@@ -69,7 +70,7 @@ $(() => {
         stamps.forEach((stamp, index) => {
             index++;
             let imageId = 'stamp_' + index;
-            let a = $('<a>').attr({ 'stamp': imageId, 'class': 'sendStamp' });
+            let a = $('<a>').attr({ 'stamp': imageId, 'class': 'uploadStamp' });
             let img = $('<img>').attr({'id': imageId, 'src': imagePath(stamp), 'width': 100 });
             a.append(img);
             stampList.append(a);
@@ -108,13 +109,13 @@ $(() => {
         myChatList.prepend(chatElement);
         chatElement.fadeIn(FADE_TIME);
     }
-    createChatStamp = (data) => {
+    createChatImage = (data, params) => {
         if (!user.token) return;
         console.log(data);
 
         let isToken = hasToken(data);
         let headerElement = createHeaderElement(data, isToken);
-        let img = $('<img>').attr('src', data.image).attr('width', STAMP_WIDTH);
+        let img = $('<img>').attr('src', data.image).attr('width', params.imageWidth);
         let messageElement = $('<div>').addClass('text-center').append(img);
         let footerElement = createFooterElement(data);
         let chatElement = $('<div>').hide().append([headerElement, messageElement, footerElement]);
@@ -193,10 +194,18 @@ $(() => {
     });
 
     // スタンプ読み込み
-    socket.on('loadStamp', (data) => {
-        console.log('loadStamp');
-        createChatStamp(data);
+    socket.on('load_stamp', (data) => {
+        console.log('load_stamp');
+        let params = { imageWidth: STAMP_WIDTH };
+        createChatImage(data, params);
     });
+
+    // スタンプ読み込み
+    socket.on('load_image', (data) => {
+        console.log('load_image');
+        let params = { imageWidth: IMAGE_WIDTH };
+        createChatImage(data, params);
+    })
 
     // ユーザ一覧
     socket.on('show_users', (data) => {
@@ -237,8 +246,7 @@ $(() => {
         stampList.toggle();
     });
 
-    $('.sendStamp').on('click', (event) => {
-
+    $('.uploadStamp').on('click', (event) => {
         const mime_type = 'image/png';
         const image = new Image();
         image.src = $(event.target).attr('src');
@@ -251,10 +259,24 @@ $(() => {
             ctx.drawImage(image, 0, 0);
             let base64 = canvas.toDataURL(mime_type);
             let data = { user: user, image: base64 };
-            socket.emit('sendStamp', data);
+            socket.emit('upload_stamp', data);
             stampList.toggle();
         }
     });
+
+    $('.uploadImage').on('change', (event) => {
+        let file = event.target.files[0];
+        let fileReader = new FileReader();
+        fileReader.onloadend = () => {
+            let data = {};
+            data.image = fileReader.result;
+            data.user = user;
+            console.log(data);
+            socket.emit('upload_image', data);
+        }
+        fileReader.readAsDataURL(file);
+        $('.uploadImage').val('');
+    })
 
     //ログアウト処理
     $('#logout').on('click', () => {

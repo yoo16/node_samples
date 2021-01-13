@@ -8,7 +8,7 @@ const port = 3000;
 const host = '127.0.0.1';
 const message = "<h1>Hello Node Server!</h1>\n";
 
-const app = http.createServer(function (request, response) {
+const app = http.createServer((request, response) => {
     // HTTPヘッダ
     response.writeHead(200, {'Content-Type': 'text/html'});
     //response.writeHead(httpStatus.OK, {'Content-Type': 'text/html'});
