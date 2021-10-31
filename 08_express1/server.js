@@ -43,5 +43,5 @@ app.post('/login', (req, res) => {
 
 //サーバ待機
 app.listen(port, host, () => {
-    console.log(`app listen: ${host}:${port}`);
+    console.log(`app listen: http://${host}:${port}`);
 });

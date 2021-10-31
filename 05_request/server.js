@@ -5,12 +5,14 @@ const httpStatus = require('http-status-codes');
 const querystring = require('querystring');
 const fs = require('fs');
 const config = require('config');
-// const process = require('process');
-// config.env = process.env.NODE_ENV;
+require('dotenv').config()
+
 
 const html = fs.readFileSync('index.html');
-const port = config.server.port;
-const host = config.server.host;
+// const port = config.server.port;
+// const host = config.server.host;
+const host = process.env.HOST
+const port = process.env.PORT;
 
 const app = http.createServer(function (request, response) {
     let post = '';
@@ -33,4 +35,4 @@ const app = http.createServer(function (request, response) {
 
 app.listen(port, host);
 
-console.log(`Server listen: ${host}:${port}`);
+console.log(`Server listen: http://${host}:${port}`);

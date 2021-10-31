@@ -1,12 +1,12 @@
-// //モジュール読み込み
+// モジュール読み込み
 const express = require('express')
 const router = express.Router()
 
-// //Controller
+// Controller
 const homeController = require('./controllers/HomeController')
 const userController = require('./controllers/UserController')
 
-// //ルーティング
+// ルーティング
 //home
 router.get('/', homeController.index)
 router.get('/about', homeController.about)
