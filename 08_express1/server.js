@@ -1,14 +1,15 @@
 const express = require('express');
-const config = require('config');
 
-const port = config.server.port;
-const host = config.server.host;
+require('dotenv').config();
+const host = process.env.HOST;
+const port = process.env.PORT;
 
 const app = express();
 
-// URLエンコードされたデータを解析する
-app.use(express.json());
+// app.use(express.json());
+// app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
 
 //Webルート GETリクエスト 
 app.get("/", (req, res) => {
@@ -19,29 +20,21 @@ app.get("/", (req, res) => {
     res.send("Hello Express!");
 });
 
-//profile GETリクエスト 
 app.get("/profile", (req, res) => {
     res.send("This is Profile page.");
 });
 
-//add POSTリクエスト 
-app.post("/add", (req, res) => {
-    conseol.log(req.body);
-});
-
-//Login Check
-app.post('/login', (req, res) => {
+app.post('/auth', (req, res) => {
     const login_name = req.body.login_name;
     const password = req.body.password;
 
-    let message = 'login error!';
-    if (login_name == 'test' && password == '1234') {
-        message = 'login success!!';
+    let message = 'ログインできませんでした';
+    if (login_name == process.env.LOGIN_NAME && password == process.env.PASSWORD) {
+        message = 'ログインしました';
     }
     res.send(message);
 })
 
-//サーバ待機
 app.listen(port, host, () => {
-    console.log(`app listen: http://${host}:${port}`);
+    console.log(`Server listen: http://${host}:${port}`);
 });
