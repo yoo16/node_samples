@@ -11,11 +11,9 @@
 <body>
   <div class="container">
     <h3 class="h3">変数</h3>
-    <% let title = 'Index Page' %>
     <h1 class="h1"><%= title %></h1>
 
     <h3 class="h3">変数(HTML)</h3>
-    <% let tag = '<p>this is index page!!!!</p>' %>
     <%- tag %>
 
     <h3 class="h3">for()</h3>
@@ -35,44 +33,33 @@
     </ul>
 
     <h3 class="h3">forEach()</h3>
-    <% 
-    let items = [
-    { name: 'Apple' },
-    { name: 'Orange' }, 
-    { name: 'Peach' }, 
-    { name: 'Strawberry' }, 
-    { name: 'Grape' }, 
-    ]
-    %>
-
     <ul>
     <% items.forEach((item, index) => { %>
-      <li><%= item.name %></li> 
+      <li><%= index %>:<%= item.name %></li> 
     <% }) %>
     </ul>
 
     <h3 class="h3">for(in)</h3>
     <ul>
-    <% for (index in items) { %>
-      <li><%= items[index].name %></li> 
+    <% for (key in items) { %>
+      <li><%= key %>:<%= items[key].name %></li> 
     <% } %>
     </ul>
 
     <h3 class="h3">if()</h3>
-    <p>
-    <% let number = Math.floor(Math.random(100) * 100) %>
-    <%= number %> is 
-    <% if (number < 25) { %>
-      under 25
-    <% } else if (number < 50) { %>
-      under 50
+    <div>
+    <%= number %> :
+    <% if (number < 50) { %>
+      Cランク
+    <% } else if (number < 80) { %>
+      Bランク
     <% } else { %>
-      under 100
+      Aランク
     <% } %>
-    </p>
+    </div>
 
     <h3 class="h3">include()</h3>
-    <%- include('./components/message.ejs', { message : 'This is message component.'}) %>
+    <%- include('./components/message.ejs', { message : message }) %>
   </div>
 
 </body>
