@@ -8,13 +8,13 @@ const message = "<h1>Hello Node Server!</h1>\n";
 
 const app = http.createServer((req, res) => {
     // HTTPヘッダ
-    response.writeHead(200, {'Content-Type': 'text/html'});
+    res.writeHead(200, {'Content-Type': 'text/html'});
 
     // レスポンス書き込み
-    response.write(message);
+    res.write(message);
 
     //レスポンスを閉じる
-    response.end();
+    res.end();
 
     console.log(`Method: ${request.method}`);
     console.log(`Response: ${message}`);
