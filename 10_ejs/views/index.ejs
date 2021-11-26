@@ -4,58 +4,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
   <title>Document</title>
 </head>
 
 <body>
   <div class="container">
+    <h1 class="h1">EJS</h1>
     <h3 class="h3">変数</h3>
-    <h1 class="h1"><%= title %></h1>
+    <div><%= title %></div>
 
     <h3 class="h3">変数(HTML)</h3>
     <%- tag %>
 
     <h3 class="h3">for()</h3>
     <ul>
-    <% for (let i = 0; i < 5; i++) { %>
-      <li><%= i + 1 %>回目</li>
-    <% } %>
+      <% for (let i = 0; i < 5; i++) { %>
+      <li><%= i %></li>
+      <% } %>
     </ul>
 
     <h3 class="h3">while()</h3>
     <ul>
-    <% let counter = 1; %>
-    <% while (counter <= 5) { %>
-    <li><%= counter %>回目</li>
-    <% counter++; %>
-    <% } %>
+      <% let counter = 1; %>
+      <% while (counter <= 5) { %>
+      <li><%= counter %></li>
+      <% counter++; %>
+      <% } %>
     </ul>
 
     <h3 class="h3">forEach()</h3>
     <ul>
-    <% items.forEach((item, index) => { %>
-      <li><%= index %>:<%= item.name %></li> 
-    <% }) %>
+      <% items.forEach((item, index) => { %>
+      <li><%= index %>:<%= item.name %></li>
+      <% }) %>
     </ul>
 
     <h3 class="h3">for(in)</h3>
     <ul>
-    <% for (key in items) { %>
-      <li><%= key %>:<%= items[key].name %></li> 
-    <% } %>
+      <% for (key in items) { %>
+      <li><%= key %>:<%= items[key].name %></li>
+      <% } %>
     </ul>
 
     <h3 class="h3">if()</h3>
     <div>
-    <%= number %> :
-    <% if (number < 50) { %>
+      <%= number %> :
+      <% if (number < 50) { %>
       Cランク
-    <% } else if (number < 80) { %>
+      <% } else if (number < 80) { %>
       Bランク
-    <% } else { %>
+      <% } else { %>
       Aランク
-    <% } %>
+      <% } %>
     </div>
 
     <h3 class="h3">include()</h3>
