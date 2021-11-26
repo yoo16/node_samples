@@ -16,7 +16,7 @@ const app = http.createServer((req, res) => {
     //レスポンスを閉じる
     res.end();
 
-    console.log(`Method: ${request.method}`);
+    console.log(`Method: ${req.method}`);
     console.log(`Response: ${message}`);
 });
 
