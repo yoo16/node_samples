@@ -1,12 +1,14 @@
-//モジュール読み込み
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-const config = require('config')
+
+require('dotenv').config()
+const port = process.env.PORT;
+const host = process.env.HOST;
+
 let users = {};
 
-//静的ファイル有効
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', (req, res) => {
@@ -114,8 +116,6 @@ io.on('connection', (socket) => {
 
 })
 
-const port = config.server.port;
-const host = config.server.host;
 http.listen(port, host, () => {
     console.log(`listening on http://${host}:${port}`)
 })

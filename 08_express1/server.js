@@ -1,6 +1,7 @@
 const express = require('express');
+const dotenv = require('dotenv');
 
-require('dotenv').config();
+dotenv.config();
 const host = process.env.HOST;
 const port = process.env.PORT;
 
@@ -9,7 +10,6 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-//Webルート GETリクエスト 
 app.get("/", (req, res) => {
     console.log(req.body);
     console.log(req.url);
