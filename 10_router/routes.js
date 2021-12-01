@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+// item.js ファイルの読み込み
+const item = require('./item')
 
 router.get('/', (req, res) => {
     res.send('Hello Express Router!!')
@@ -22,20 +24,18 @@ router.post('/auth', (req, res) => {
 
 router.get("/user/edit/:id", (req, res) => {
     const id = req.params.id
-    res.send('user edit page: id =' + id);
-});
+    const message = 'ユーザID: ' + id
+    res.send(message);
+})
 
 router.get('/item/:id', (req, res) => {
-    const items = {
-        1: { name: 'コーヒー', price: 150 },
-        2: { name: '紅茶', price: 180 },
-        3: { name: 'ほうじ茶', price: 100 },
-    }
     const id = req.params.id
-    let item = 'Not Found item.'
-    if (id && items[id]) item = items[id]
-
-    res.send(item)
+    let message = '商品がみつかりませんでした'
+    let _item
+    if (id && (_item = item.values[id])) {
+        message = _item.name + 'の価格:' + _item.price + '円'
+    }
+    res.send(message)
 })
 
 module.exports = router
