@@ -31,8 +31,8 @@ router.get("/user/edit/:id", (req, res) => {
 router.get('/item/:id', (req, res) => {
     const id = req.params.id
     let message = '商品がみつかりませんでした'
-    let _item
-    if (id && (_item = item.values[id])) {
+    if (id && item.values[id]) {
+        let _item = item.values[id]
         message = _item.name + 'の価格:' + _item.price + '円'
     }
     res.send(message)
