@@ -1,32 +1,19 @@
 const express = require('express')
-const config = require('config')
-const layouts = require('express-ejs-layouts')
-
 const routes = require('./routes')
 
-const port = config.server.port
-const host = config.server.host
+require('dotenv').config()
+const host = process.env.HOST
+const port = process.env.PORT
 
 const app = express()
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+const layouts = require('express-ejs-layouts')
+app.set('layout', 'layouts/default');
+app.use(layouts);
 
-app.use(express.static(__dirname + '/public'))
-
-//テンプレートエンジン EJS
 app.set('view engine', 'ejs')
+app.use(routes)
 
-//layout.ejs カスタムパス
-app.set('layout', 'layouts/layout')
-
-//layouts ミドルウェア
-app.use(layouts)
-
-//routes ミドルウェア
-app.use('/', routes)
-
-//ポート:3000待機
 app.listen(port, host, () => {
-    console.log(`app listen: http://${host}:${port}`)
-});
+    console.log(`Server listen: http://${host}:${port}`)
+})

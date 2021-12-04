@@ -33,13 +33,7 @@ router.post('/auth', (req, res) => {
     res.send(message);
 })
 
-router.get("/user/edit/:id", (req, res) => {
-    const id = req.params.id;
-    const message = 'ユーザID: ' + id;
-    res.send(message);
-})
-
-router.get('/item/', (req, res) => {
+router.get('/item', (req, res) => {
     let data = { items: item.values };
     data.title = '商品一覧';
     res.render('item/index.ejs', data);
@@ -47,9 +41,13 @@ router.get('/item/', (req, res) => {
 
 router.get('/item/:id', (req, res) => {
     const id = req.params.id;
+
     let data = {};
     data.item = item.find(id);
     data.title = '商品情報';
+    data.message = ''
+
+    if (!data.item) data.message = '商品が見つかりませんでした';
     res.render('item/show.ejs', data);
 })
 

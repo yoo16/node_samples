@@ -1,0 +1,14 @@
+<div>
+  <dl>
+    <dt>名前</dt>
+    <dd><%= user.name %></dd>
+    <dt>出身地</dt>
+    <dd><%= user.birthplace %></dd>
+    <dt>趣味</dt>
+    <dd>
+      <% user.hobby.forEach((hobby) => { %>
+      <%= hobby %>
+      <% }) %>
+    </dd>
+  </dl>
+</div>
