@@ -10,14 +10,16 @@
 
 <body>
   <div class="container">
-    <h1 class="h1">商品情報</h1>
+
+    <h3 class="h3"><%= title %></h3>
     <dl>
-      <dt>商品名</dt>
-      <dd>
-        <%= item.name %>
-      </dd>
+      <% items.forEach ((item) => { %>
+      <dd><a href="/item/<%= item.id %>""><%= item.name %></a></dd>
+      <dd><%= item.price %>円</dd>
+      <% }) %>
     </dl>
   </div>
+
 </body>
 
 </html>
