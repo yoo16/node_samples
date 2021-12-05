@@ -1,22 +1,23 @@
-const express = require('express')
-const app = express()
-const http = require('http').createServer(app)
-const io = require('socket.io')(http)
-const config = require('config')
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
-app.use(express.static(__dirname + '/public'))
+const dotenv = require('dotenv');
+dotenv.config();
+const host = process.env.HOST
+const port = process.env.PORT
 
-io.on('connection', (socket) => {
-    // client からの受信
-    socket.on('client_to_server', (data) => {
-        console.log(data);
-        // client へ送信
-        io.emit('server_to_client', data)
-    })
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
+
+http.listen(port, host, () => {
+    console.log(`listening on http://${host}:${port}`);
 })
 
-const port = config.server.port
-const host = config.server.host
-http.listen(port, host, () => {
-    console.log(`listening on http://${host}:${port}`)
+io.on('connection', (socket) => {
+    socket.on('message', (data) => {
+        console.log(data);
+        io.emit('message', data);
+    })
 })

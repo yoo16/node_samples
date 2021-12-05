@@ -3,9 +3,11 @@ const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 
-require('dotenv').config()
-const port = process.env.PORT;
-const host = process.env.HOST;
+const dotenv = require('dotenv');
+dotenv.config();
+const host = process.env.HOST
+const port = process.env.PORT
+
 
 let users = {};
 
