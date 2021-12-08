@@ -7,12 +7,13 @@ exports.index = (req, res) => {
     res.render('login/index.ejs', data)
 }
 
-exports.auth = (req, res) => {
+exports.auth = async (req, res) => {
     const login_name = req.body.login_name;
     const password = req.body.password;
 
-    if (login_name == process.env.LOGIN_NAME
-         && password == process.env.PASSWORD) {
+    let data = {}
+    data.user = await user.auth(login_name, password)
+    if (data.user.id) {
         res.redirect('/user');
     } else {
         res.redirect('/login');

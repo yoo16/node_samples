@@ -1,14 +1,14 @@
-// DB の connect 処理をモジュールにして読み込む
-const db = require('./lib/db');
+const db = require('../lib/db');
 
-//db: connect()
 const con = db.connect();
 
 //users から 10件取得
-const limit = 3;
+const limit = 10;
 const offset = 0;
 let params = [limit, offset];
 let sql = 'SELECT * FROM users LIMIT ? OFFSET ?;';
+// let params = { limit: 10, offset: 0 };
+// let sql = 'SELECT * FROM users LIMIT ? OFFSET ?;';
 con.query(sql, params, (error, results, fields) => {
     results.forEach((user, index) => {
         console.log(`${user.id} : ${user.email}`);
