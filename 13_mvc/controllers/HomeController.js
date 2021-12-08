@@ -1,3 +1,5 @@
+const user = require('../models/user')
+
 exports.index = (req, res) => {
     let data = {}
     data.title = 'トップページ';
@@ -5,15 +7,9 @@ exports.index = (req, res) => {
 }
 
 exports.profile = (req, res) => {
-    let user = {
-        id: 1,
-        name: '横浜　太郎',
-        birthplace: '横浜',
-        hobby: ['旅行', 'グルメ', 'スポーツ'],
-    }
     let data = {};
     data.title = 'プロフィール';
-    data.user = user;
+    data.user = user.find(1);
 
     res.render('profile/index.ejs', data);
 }

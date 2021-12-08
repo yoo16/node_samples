@@ -45,9 +45,7 @@ router.get('/item/:id', (req, res) => {
     let data = {};
     data.item = item.find(id);
     data.title = '商品情報';
-    data.message = ''
 
-    if (!data.item) data.message = '商品が見つかりませんでした';
     res.render('item/show.ejs', data);
 })
 

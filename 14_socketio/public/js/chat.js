@@ -1,9 +1,9 @@
 $(() => {
-    const url = '';
-    let socket = io.connect(url);
-
     const message = $('#message');
     const myChatList = $('#chatList');
+    
+    const url = '';
+    let socket = io.connect(url);
 
     // メッセージ受信
     socket.on('message', (data) => {

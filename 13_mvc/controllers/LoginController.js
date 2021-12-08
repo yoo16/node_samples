@@ -1,4 +1,3 @@
-
 exports.index = (req, res) => {
     let data = {}
     data.title = 'ログイン'

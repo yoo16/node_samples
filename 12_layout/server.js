@@ -13,9 +13,9 @@ app.use(express.static(__dirname + '/public'));
 
 const layouts = require('express-ejs-layouts');
 app.set('layout', 'layouts/default');
+app.set('view engine', 'ejs');
 app.use(layouts);
 
-app.set('view engine', 'ejs');
 app.use(routes);
 
 app.listen(port, host, () => {
