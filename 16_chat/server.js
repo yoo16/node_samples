@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
+const uuidv4 = require('uuid').v4
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -38,81 +39,56 @@ fetchUser = (socket) => {
     return users[socket.id];
 }
 
-generateToken = () => {
-    let token = Math.random().toString(32).substring(2);
-    return token;
-}
-
 //connection イベント 
 io.on('connection', (socket) => {
-    console.log(socket.id);
-
     // client から server のメッセージ
-    socket.on('client_to_server', (data) => {
-        data.datetime = new Date();
-        console.log(data);
+    socket.on('message', (data) => {
+        data.datetime = Date.now();
         // server から client へのメッセージ
-        io.emit('server_to_client', data);
+        io.emit('message', data);
     })
 
     //ログイン処理
-    socket.on('login', (user) => {
-        console.log('login');
-
-        //user.isConnect = true なら終了
-        if (user.isConnect) return;
-
-        //user.isConnect を true にする
-        user.isConnect = true;
+    socket.on('auth', (user) => {
+        //トークンがあれば処理しない
+        if (user.token) return;
 
         //トークン発行
-        user.token = generateToken();
+        user.token = uuidv4();
 
-        //Socket ID をキーに user を users 配列に登録
+        //Socket ID をキーに user を配列に追加
         users[socket.id] = user;
 
         //data の作成
         let data = { user: user, users: users };
         console.log(user);
 
-        //送信元の「logined」に、データ送信 emit()
+        //送信元の「logined」に emit()
         socket.emit('logined', data);
 
-        //送信元以外全てのクライアントの「user_joined」にデータ送信（ブロードキャスト）
+        //ブロードキャストで「user_joined」に emit()
         socket.broadcast.emit('user_joined', data);
     });
 
     //スタンプ送受信
     socket.on('upload_stamp', (data) => {
         console.log('upload_stamp');
-        data.datetime = new Date();
+        data.datetime = Date.now();
         io.emit('load_stamp', data);
     });
 
     //画像送受信
     socket.on('upload_image', (data) => {
-        console.log('upload_image');
-        data.datetime = new Date();
+        data.datetime = Date.now();
         io.emit('load_image', data);
-    });
-
-    //ユーザ一覧
-    socket.on('userList', () => {
-        console.log('userList');
-        console.log(users);
-        socket.emit('show_users', {
-            users: users,
-        });
     });
 
     //ログアウト
     socket.on('logout', () => {
-        console.log('logout');
         logout(socket);
     });
 
     socket.on('disconnect', () => {
-        console.log('disconnect');
         logout(socket);
     });
 
