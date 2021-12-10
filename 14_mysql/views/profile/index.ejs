@@ -6,9 +6,11 @@
     <dd><%= user.birthplace %></dd>
     <dt>趣味</dt>
     <dd>
-      <% user.hobby.forEach((hobby) => { %>
+      <% if (user.hobby) { %>
+      <% user.hobby.split(',').forEach((hobby) => { %>
       <%= hobby %>
       <% }) %>
+      <% } %>
     </dd>
   </dl>
 </div>

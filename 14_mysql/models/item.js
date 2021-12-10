@@ -1,8 +1,20 @@
-exports.values = [
-    { id: 1, name: 'コーヒー', price: 150 },
-    { id: 2, name: '紅茶', price: 180 },
-    { id: 3, name: 'ほうじ茶', price: 100 },
-]
-exports.find = (id) => {
-    return this.values.find((value) => value.id == id)
+const db = require('../lib/db');
+const mysql = require('mysql2/promise');
+
+exports.find = async (id) => {
+    const sql = 'SELECT * FROM items WHERE ?;';
+    params = { id: id };
+
+    const con = await mysql.createConnection(db.info)
+    const [rows] = await con.query(sql, params);
+    await con.end();
+    return rows[0];
+}
+exports.get = async () => {
+    const sql = 'SELECT * FROM items;';
+    const con = await mysql.createConnection(db.info)
+    params = { limit: 10, offset: 0 };
+    const [rows] = await con.query(sql);
+    await con.end();
+    return rows;
 }

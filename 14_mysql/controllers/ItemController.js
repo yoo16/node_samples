@@ -1,19 +1,18 @@
 const item = require('../models/item');
 
-exports.index = (req, res) => {
-    let data = { items: item.values };
+exports.index = async (req, res) => {
+    let data = {};
     data.title = '商品一覧';
+    data.items = await item.get();
     res.render('item/index.ejs', data);
 }
 
-exports.show = (req, res) => {
+exports.show = async (req, res) => {
     const id = req.params.id;
 
     let data = {};
-    data.item = item.find(id);
     data.title = '商品情報';
-    data.message = ''
+    data.item = await item.find(id);
 
-    if (!data.item) data.message = '商品が見つかりませんでした';
     res.render('item/show.ejs', data);
 }

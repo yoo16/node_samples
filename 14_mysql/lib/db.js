@@ -1,4 +1,3 @@
-const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -15,29 +14,3 @@ exports.info = {
     port: port,
     password: password,
 }
-
-exports.connect = () => {
-    const con = mysql.createConnection(this.info)
-    con.connect((err) => {
-        if (err) throw err;
-    })
-    return con;
-}
-
-exports.query = async (con, sql, params) => {
-    return con.query(sql, params, (err) => {
-        if (err) throw err;
-        console.log(sql);
-        con.end();
-    });
-}
-
-// exports.insert = (table_name, posts) => {
-//     let sql = `INSERT INTO ${table_name} SET ?;`;
-//     posts.forEach((post) => {
-//         con.query(sql, post, (err, results) => {
-//             if (err) console.log(err.sqlMessage);
-//             console.log('insert success.');
-//         })
-//     })
-// }

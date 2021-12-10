@@ -11,9 +11,10 @@ exports.auth = async (req, res) => {
     const login_name = req.body.login_name;
     const password = req.body.password;
 
-    let data = {}
-    data.user = await user.auth(login_name, password)
-    if (data.user.id) {
+    //セッション保存
+    req.session.user = await user.auth(login_name, password)
+    //リダイレクト
+    if (req.session.user) {
         res.redirect('/user');
     } else {
         res.redirect('/login');
@@ -21,5 +22,6 @@ exports.auth = async (req, res) => {
 }
 
 exports.logout = (req, res) => {
+    req.session.user = null;
     res.redirect('login/');
 }
