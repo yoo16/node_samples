@@ -159,6 +159,20 @@ $(() => {
         createChatImage(data, { width: IMAGE_WIDTH })
     })
 
+    // ログイン
+    $('#login').on('click', () => {
+        let name = inputName.val();
+        let icon = $('input[name=icon]:checked').val()
+        if (name && icon) {
+            loginArea.hide()
+            chatArea.fadeIn(FADE_TIME)
+            socket.emit('auth', { 
+                name: name,
+                icon: icon, 
+            })
+        }
+    })
+
     // メッセージ送信
     $('#send').on('click', () => {
         if (!user.token) return
@@ -169,17 +183,6 @@ $(() => {
             user: user,
         })
         message.val('')
-    })
-
-    // ログイン
-    $('#login').on('click', () => {
-        let name = inputName.val();
-        let icon = $('input[name=icon]:checked').val()
-        if (name && icon) {
-            loginArea.hide()
-            chatArea.fadeIn(FADE_TIME)
-            socket.emit('auth', { name: name, icon: icon, })
-        }
     })
 
     $('.stamp').on('click', () => {

@@ -2,13 +2,13 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-const uuidv4 = require('uuid').v4
 
 const dotenv = require('dotenv');
 dotenv.config();
 const host = process.env.HOST
 const port = process.env.PORT
 
+const uuidv4 = require('uuid').v4
 
 let users = {};
 
