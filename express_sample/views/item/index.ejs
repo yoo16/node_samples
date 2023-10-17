@@ -1,0 +1,12 @@
+<table class="table">
+  <tr>
+    <th>商品名</th>
+    <th>価格</th>
+  </tr>
+<% items.forEach ((item)=> { %>
+  <tr>
+    <td><a href="/item/<%= item.id %>""><%= item.name %></a></td>
+    <td><%= item.price %>円</td>
+  </tr>
+<% }) %>
+</table>

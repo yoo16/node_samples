@@ -1,0 +1,16 @@
+<div>
+  <% if (item) { %>
+    <table class="table">
+      <tr>
+        <th>商品名</th>
+        <td><%= item.name %></td>
+      </tr>
+      <tr>
+        <th>価格</th>
+        <td><%= item.price %>円</td>
+      </tr>
+    </table>
+  <% } else { %>
+    <p>商品が見つかりません</p>
+  <% } %>
+</div>

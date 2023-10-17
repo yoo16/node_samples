@@ -1,6 +1,9 @@
 const fs = require('fs');
-const jsonFile = "./data/users.json";
-const values = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+var values;
+
+exports.init = (file) => {
+    values = JSON.parse(fs.readFileSync(file, 'utf8'));
+}
 
 exports.get = () => {
     return values
@@ -9,3 +12,5 @@ exports.get = () => {
 exports.find = (id) => {
     return values.find((value) => value.id == id)
 }
+
+module.exports = model;
