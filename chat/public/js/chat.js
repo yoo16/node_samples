@@ -166,10 +166,11 @@ $(() => {
         if (name && icon) {
             loginArea.hide()
             chatArea.fadeIn(FADE_TIME)
-            socket.emit('auth', { 
+            socket.emit('auth', {
                 name: name,
-                icon: icon, 
-            })
+                icon: icon,
+            });
+
         }
     })
 
@@ -189,7 +190,7 @@ $(() => {
         stampList.toggle()
     })
 
-    //スタンプアップロード
+    //スタンプ送信
     $('.uploadStamp').on('click', (event) => {
         const mime_type = 'image/png'
         const image = new Image()
@@ -203,8 +204,8 @@ $(() => {
             let base64 = canvas.toDataURL(mime_type)
             let data = { user: user, image: base64 }
             socket.emit('upload_stamp', data)
-            stampList.toggle()
         }
+        stampList.hide()
     })
 
     //画像アップロード

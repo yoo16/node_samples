@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS users (
     name varchar(255) NOT NULL,
     email varchar(255) UNIQUE NOT NULL,
     password varchar(255) NOT NULL,
-    hobby text NULL,
+    email_ varchar(255) NOT NULL,
+    email_verified_at DATETIME DEFAULT NULL,
+    remember_token varchar(100) DEFAULT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

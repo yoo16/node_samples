@@ -1,9 +1,9 @@
 -- DROP TABLE IF EXISTS items;
-CREATE TABLE IF NOT EXISTS items (
+CREATE TABLE IF NOT EXISTS tweets (
     id bigint UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name varchar(255) NOT NULL,
-    price int NOT NULL,
-    stock int DEFAULT 0,
+    message varchar(255) NOT NULL,
+    user_id int NOT NULL,
+    image_path TEXT DEFAULT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

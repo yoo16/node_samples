@@ -1,13 +1,6 @@
-const fs = require('fs');
-
-const dataFile = "./data/items.json";
-
-exports.get = () => {
-    var values = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-    return values
+const Model = require('./Model')
+class Item extends Model {
+    dataFile = "./data/items.json"; 
 }
 
-exports.find = (id) => {
-    var values = this.get()
-    return values.find((value) => value.id == id)
-}
+module.exports = Item

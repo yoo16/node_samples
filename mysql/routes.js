@@ -2,10 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 // Controller
-const homeController = require('./controllers/HomeController')
-const itemController = require('./controllers/ItemController')
-const loginController = require('./controllers/LoginController')
-const userController = require('./controllers/UserController')
+const HomeController = require('./controllers/HomeController')
+const TweetController = require('./controllers/TweetController')
+const LoginController = require('./controllers/LoginController')
+const UserController = require('./controllers/UserController')
+const RegistController = require('./controllers/RegistController')
 
 //セッション
 router.use((req, res, next) => {
@@ -23,19 +24,23 @@ router.use(['/user*', '/item*'], (req, res, next) => {
 })
 
 //home
-router.get('/', homeController.index)
+router.get('/', HomeController.index)
 
-//item
-router.get('/item', itemController.index)
-router.get('/item/:id', itemController.show)
+//tweet
+router.get('/api/tweet', TweetController.index)
+router.get('/api/tweet/:id', TweetController.show)
 
 //login
-router.get('/login', loginController.index)
-router.post('/login/auth', loginController.auth)
-router.get('/logout', loginController.logout)
+router.get('/login', LoginController.index)
+router.post('/login/auth', LoginController.auth)
+router.get('/logout', LoginController.logout)
 
 //user
-router.get('/user', userController.index)
-router.get('/user/profile', userController.profile)
+router.get('/user', UserController.index)
+router.get('/user/profile', UserController.profile)
+
+//regist
+router.get('/regist', RegistController.index)
+router.post('/regist/add', RegistController.add)
 
 module.exports = router

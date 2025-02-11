@@ -1,0 +1,29 @@
+<div class="mt-3">
+  <div>
+    <div class="text-end">
+      <span class="me-3">
+        Welcome, <%= user.name %>
+      </span>
+
+      <a class="btn btn-sm btn-outline-primary" href="/user/logout">ログアウト</a>
+    </div>
+  </div>
+
+  <h2>ユーザ情報</h2>
+  <dl>
+    <dt>名前</dt>
+    <dd>
+      <%= user.name %>
+    </dd>
+    <dt>出身地</dt>
+    <dd>
+      <%= user.birthplace %>
+    </dd>
+    <dt>趣味</dt>
+    <dd>
+      <% user.hobby.forEach((hobby)=> { %>
+        <%= hobby %>
+          <% }) %>
+    </dd>
+  </dl>
+</div>

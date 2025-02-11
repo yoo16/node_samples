@@ -16,6 +16,13 @@ app.set('layout', 'layouts/default');
 app.set('view engine', 'ejs');
 app.use(layouts);
 
+const session = require('express-session')
+app.use(session({
+    secret: 'secret_key',
+    resave: false,
+    saveUninitalized: false,
+}))
+
 app.use(routes);
 
 app.listen(port, host, () => {

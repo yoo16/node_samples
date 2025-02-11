@@ -1,19 +1,20 @@
-const user = require('../models/user')
+const User = require('../models/User');
 
 exports.index = (req, res) => {
-    let data = {}
+    var data = {}
     data.title = 'ログイン'
-    data.layout = 'layouts/login'
     res.render('login/index.ejs', data)
 }
 
 exports.auth = async (req, res) => {
-    const login_name = req.body.login_name;
+    //TODO validate
+
+    const email = req.body.email;
     const password = req.body.password;
 
-    //セッション保存
-    req.session.user = await user.auth(login_name, password)
-    //リダイレクト
+    const user = new User();
+    req.session.user = await user.auth(email, password)
+
     if (req.session.user) {
         res.redirect('/user');
     } else {
@@ -22,6 +23,6 @@ exports.auth = async (req, res) => {
 }
 
 exports.logout = (req, res) => {
-    req.session.user = null;
+    delete(req.session.user);
     res.redirect('login/');
 }

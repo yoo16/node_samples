@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "email": "alice@test.com",
+        "password": "1234",
+        "name": "Alice",
+        "hobby": [ "旅行", "グルメ" ]
+    },
+    {
+        "id": 2,
+        "email": "bob@test.com",
+        "password": "1234",
+        "name": "Bob",
+        "hobby": [ "旅行", "スポーツ" ]
+    },
+    {
+        "id": 3,
+        "email": "chris@test.com",
+        "password": "1234",
+        "name": "Chris",
+        "hobby": [ "読書", "ゲーム" ]
+    }
+]

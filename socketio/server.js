@@ -1,7 +1,12 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -16,8 +21,10 @@ http.listen(port, host, () => {
 })
 
 io.on('connection', (socket) => {
-    socket.on('message', (data) => {
+    socket.on('chat_message', (data) => {
         console.log(data);
-        io.emit('message', data);
+        data.socketID = socket.id;
+        data.time = Date.now();
+        io.emit('chat_message', data);
     })
 })
